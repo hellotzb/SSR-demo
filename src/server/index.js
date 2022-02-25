@@ -40,19 +40,19 @@ app.get('*', function (req, res) {
   // console.log('matchRoutes--', matchRoutes);
   matchRoutes.forEach(item => {
     if (item.loadData) {
-      promises.push(item.loadData(store));
+      // 避免有一个接口获取失败导致服务端渲染错误以及有一个接口报错，其他接口请求时间过长不会返回
+      const promise = new Promise(resolve => {
+        item.loadData(store).finally(resolve);
+      });
+      promises.push(promise);
     }
   });
 
-  Promise.all(promises)
-    .then(() => {
-      // 这时已经准备好数据
-      // console.log('state--', store.getState());
-      res.send(render(store, req));
-    })
-    .catch(err => {
-      console.error('promise.all err', err);
-    });
+  Promise.all(promises).then(() => {
+    // 这时已经准备好数据
+    // console.log('state--', store.getState());
+    res.send(render(store, req));
+  });
 });
 
 app.listen(port, () => {

@@ -2,8 +2,9 @@ import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Home from './screens/Home';
 import Login from './screens/Login';
+import NotFound from './screens/NotFound';
 import Header from './components/Header';
-import { Outlet, Navigate } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
 
 // 原生处理二级路由
 export const routes = [
@@ -50,7 +51,7 @@ export const routes = [
   {
     key: 'not-found',
     path: '*',
-    element: <Navigate to='/home' />,
+    element: <NotFound />,
   },
 ];
 
