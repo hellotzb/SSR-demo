@@ -47,9 +47,16 @@ export const render = (store, req) => {
 };
 
 // TODO: 扩展 matchPath 方法，能够匹配多级路由
-const extendsMatchPath = (route, url) => {
+const newMatchpath = (route, url) => {
   // '/' -> '/home'
   // '/test' -> '/test/test2'
+  if (route.parentPath) {
+    // 处理多级路由
+    const parentPath = route.parentPath === '/' ? '' : route.parentPath;
+    return url === parentPath + '/' + route.path;
+  } else {
+    return matchPath(route, url);
+  }
 };
 
 export const matchRoutesFn = (routes, url, cb) => {
@@ -58,16 +65,18 @@ export const matchRoutesFn = (routes, url, cb) => {
     routes.length === 0
   )
     return false;
-  // some() 方法测试数组中有至少一个元素通过回调函数的测试就会返回true；所有元素都没有通过回调函数的测试返回值才会为false。
-  routes.map(route => {
+
+  for (let i = 0; i < routes.length; i++) {
     // matchPath 只能处理一级路由
-    const match = matchPath(route, url);
+    const match = newMatchpath(routes[i], url);
     if (match) {
       // console.log('route matched');
-      cb?.(route);
-      return match;
-    } else if (route.children) {
-      matchRoutesFn(route.children, url, cb);
+      cb?.(routes[i]);
+      return true;
+    } else if (routes[i].children) {
+      // 子路由匹配的话将父路由放入matchRoute数组中
+      const childrenMatch = matchRoutesFn(routes[i].children, url, cb);
+      childrenMatch && cb?.(routes[i]);
     }
-  });
+  }
 };
