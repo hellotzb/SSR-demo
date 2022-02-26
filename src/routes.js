@@ -17,14 +17,12 @@ export const routes = [
       {
         key: 'home',
         path: 'home',
-        parentPath: '/', //使 matchPath 能够匹配多级路由，TODO: 优化
         element: <Home />,
         loadData: Home.loadData,
       },
       {
         key: 'login',
         path: 'login',
-        parentPath: '/',
         element: <Login />,
       },
     ],
@@ -42,7 +40,6 @@ export const routes = [
       {
         key: 'test2',
         path: 'test2',
-        parentPath: '/test',
         element: <Home />,
         loadData: Home.loadData,
       },

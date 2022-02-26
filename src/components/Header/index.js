@@ -9,10 +9,10 @@ const Header = () => {
   const isLogin = useSelector(state => state.header.isLogin);
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    // TODO: 优化，login通用接口服务端能够后渲染可以不在客户端进行渲染(处理二级路由)
-    dispatch(fetchLogin(LOGIN_INFO));
-  }, []);
+  // useEffect(() => {
+  // 优化，login通用接口服务端能够后渲染可以不在客户端进行渲染(处理二级路由)
+  // dispatch(fetchLogin(LOGIN_INFO));
+  // }, []);
 
   const handleLogin = () => {
     dispatch(fetchLogin(LOGIN_INFO));

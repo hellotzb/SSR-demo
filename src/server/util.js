@@ -46,20 +46,20 @@ export const render = (store, req) => {
   `;
 };
 
-// TODO: 扩展 matchPath 方法，能够匹配多级路由
-const newMatchpath = (route, url) => {
+// 扩展 matchPath 方法，能够匹配多级路由
+const newMatchpath = (route, url, parentPath) => {
   // '/' -> '/home'
   // '/test' -> '/test/test2'
-  if (route.parentPath) {
+  if (parentPath) {
     // 处理多级路由
-    const parentPath = route.parentPath === '/' ? '' : route.parentPath;
-    return url === parentPath + '/' + route.path;
+    const newParentPath = parentPath === '/' ? '' : parentPath;
+    return url === newParentPath + '/' + route.path;
   } else {
     return matchPath(route, url);
   }
 };
 
-export const matchRoutesFn = (routes, url, cb) => {
+export const matchRoutesFn = (routes, url, cb, parentPath) => {
   if (
     Object.prototype.toString.call(routes) !== '[object Array]' ||
     routes.length === 0
@@ -68,14 +68,19 @@ export const matchRoutesFn = (routes, url, cb) => {
 
   for (let i = 0; i < routes.length; i++) {
     // matchPath 只能处理一级路由
-    const match = newMatchpath(routes[i], url);
+    const match = newMatchpath(routes[i], url, parentPath);
     if (match) {
       // console.log('route matched');
       cb?.(routes[i]);
       return true;
     } else if (routes[i].children) {
       // 子路由匹配的话将父路由放入matchRoute数组中
-      const childrenMatch = matchRoutesFn(routes[i].children, url, cb);
+      const childrenMatch = matchRoutesFn(
+        routes[i].children,
+        url,
+        cb,
+        routes[i].path
+      );
       childrenMatch && cb?.(routes[i]);
     }
   }
