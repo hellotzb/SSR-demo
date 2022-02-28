@@ -4,6 +4,7 @@ import { renderToString } from 'react-dom/server';
 import { StaticRouter } from 'react-router-dom/server';
 import { Provider } from 'react-redux';
 import { matchPath } from 'react-router';
+import StyleContext from 'isomorphic-style-loader/StyleContext';
 
 export const render = (store, req) => {
   /* 
@@ -13,14 +14,19 @@ export const render = (store, req) => {
     4.客户端会执行componentDidMount，获取列表数据，更新store的内容
     5.客户端渲染出列表对应内容
    */
+  const css = new Set(); // CSS for all rendered React components
+  const insertCss = (...styles) =>
+    styles.forEach(style => css.add(style._getCss()));
 
   // renderToString无法处理事件
   const homeContent = renderToString(
-    <Provider store={store}>
-      <StaticRouter location={req.url}>
-        <Routes />
-      </StaticRouter>
-    </Provider>
+    <StyleContext.Provider value={{ insertCss }}>
+      <Provider store={store}>
+        <StaticRouter location={req.url}>
+          <Routes />
+        </StaticRouter>
+      </Provider>
+    </StyleContext.Provider>
   );
 
   return `
@@ -30,6 +36,8 @@ export const render = (store, req) => {
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="/index.js" defer></script>
+        <style>${[...css].join('')}</style>
         <title>SSR test</title>
       </head>
       <body>
@@ -40,7 +48,6 @@ export const render = (store, req) => {
             state: ${JSON.stringify(store.getState())}
           };
         </script>
-        <script src="/index.js"></script>
       </body>
     </html>
   `;
@@ -70,7 +77,7 @@ export const matchRoutesFn = (routes, url, cb, parentPath) => {
     // matchPath 只能处理一级路由
     const match = newMatchpath(routes[i], url, parentPath);
     if (match) {
-      // console.log('route matched');
+      // console.log('route matched', routes[i]);
       cb?.(routes[i]);
       return true;
     } else if (routes[i].children) {

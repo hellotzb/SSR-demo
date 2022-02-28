@@ -27,7 +27,7 @@ app.get('*', function (req, res) {
   const store = getStore();
   // 需要根据路由的路径来往store中加数据
 
-  // 如果用户访问/home，就拿home组件的异步数据；如果访问/login路径，就拿login组件的异步数据
+  // 如果用户访问/home，就拿home组件的异步数据；如果访问/page路径，就拿page组件的异步数据
   const promises = [];
   const matchRoutes = []; // 储存匹配的路由路径
 

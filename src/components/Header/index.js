@@ -1,11 +1,15 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useLayoutEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Outlet } from 'react-router-dom';
 import { fetchLogin, logout } from './store';
 import { LOGIN_INFO } from '../../config';
+import useStyles from 'isomorphic-style-loader/useStyles';
+
+import styles from './index.less'; // 需要在webpack中css-loader的配置开启modules: true,
 
 const Header = () => {
+  useStyles(styles);
   const isLogin = useSelector(state => state.header.isLogin);
   const dispatch = useDispatch();
 
@@ -27,9 +31,13 @@ const Header = () => {
       <Link to='/home'>首页</Link>
       <br />
       {isLogin ? (
-        <div onClick={handleLogout}>退出</div>
+        <div className={styles.logout} onClick={handleLogout}>
+          退出
+        </div>
       ) : (
-        <div onClick={handleLogin}>登陆</div>
+        <div className={styles.login} onClick={handleLogin}>
+          登陆
+        </div>
       )}
       <Outlet />
     </div>

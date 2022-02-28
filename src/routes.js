@@ -1,7 +1,7 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Home from './screens/Home';
-import Login from './screens/Login';
+import Page from './screens/Page';
 import NotFound from './screens/NotFound';
 import Header from './components/Header';
 import { Outlet } from 'react-router-dom';
@@ -21,9 +21,9 @@ export const routes = [
         loadData: Home.loadData,
       },
       {
-        key: 'login',
-        path: 'login',
-        element: <Login />,
+        key: 'page',
+        path: 'page',
+        element: <Page />,
       },
     ],
   },

@@ -1,9 +1,13 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getHomeList } from './store';
+import useStyles from 'isomorphic-style-loader/useStyles';
+
+import styles from './index.less';
 
 // componentDidMount在服务器端是不执行的
 const Home = () => {
+  useStyles(styles);
   const name = useSelector(state => state.home.name);
   const homeList = useSelector(state => state.home.homeList);
   const dispatch = useDispatch();
@@ -17,7 +21,9 @@ const Home = () => {
   return (
     <div>
       <button onClick={() => alert('Hello World')}>click</button>
-      <div>home's name is: {name}</div>
+      <div>
+        home's name is: <span className={styles.strong}>{name}</span>
+      </div>
       <div>HomeList:</div>
       {!!homeList.length &&
         homeList.map(item => (
