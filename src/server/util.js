@@ -1,10 +1,11 @@
 import React from 'react';
-import Routes from '../Routes';
 import { renderToString } from 'react-dom/server';
 import { StaticRouter } from 'react-router-dom/server';
 import { Provider } from 'react-redux';
 import { matchPath } from 'react-router';
 import StyleContext from 'isomorphic-style-loader/StyleContext';
+import { Helmet } from 'react-helmet';
+import Routes from '../routes';
 
 export const render = (store, req) => {
   /* 
@@ -29,16 +30,17 @@ export const render = (store, req) => {
     </StyleContext.Provider>
   );
 
+  // 使用react-helmet优化seo
+  const helmet = Helmet.renderStatic();
+
   return `
     <!DOCTYPE html>
     <html lang="en">
       <head>
-        <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        ${helmet.title.toString()}
+        ${helmet.meta.toString()}
         <script src="/index.js" defer></script>
         <style>${[...css].join('')}</style>
-        <title>SSR test</title>
       </head>
       <body>
         <div id="root">${homeContent}</div>

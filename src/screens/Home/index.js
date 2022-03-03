@@ -1,7 +1,8 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getHomeList } from './store';
 import useStyles from 'isomorphic-style-loader/useStyles';
+import { Helmet } from 'react-helmet';
+import { getHomeList } from './store';
 
 import styles from './index.less';
 
@@ -20,6 +21,12 @@ const Home = () => {
 
   return (
     <div>
+      <Helmet>
+        <meta charSet='utf-8' />
+        <title>home page</title>
+        <meta name='description' content='这是home page' />
+        <link rel='canonical' href='http://mysite.com/example' />
+      </Helmet>
       <button onClick={() => alert('Hello World')}>click</button>
       <div>
         home's name is: <span className={styles.strong}>{name}</span>

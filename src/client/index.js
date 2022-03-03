@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
 import { getClientStore } from '../store';
-import Routes from '../Routes';
+import Routes from '../routes';
 import StyleContext from 'isomorphic-style-loader/StyleContext';
 
 const store = getClientStore();
